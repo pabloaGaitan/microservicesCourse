@@ -17,7 +17,7 @@ import com.microservicios.oauth.clients.UsuarioFeignClient;
 import com.microservicios.usuariocommons.entities.Usuario;
 
 @Service
-public class UsuarioService implements UserDetailsService{
+public class UsuarioService implements UserDetailsService, IUsuarioService{
 	
 	private Logger log = org.slf4j.LoggerFactory.getLogger(UsuarioService.class);
 
@@ -43,6 +43,11 @@ public class UsuarioService implements UserDetailsService{
 		
 		return new User(username, usuario.getPassword(), usuario.getEnabled(), true, 
 				true, true, authorities);
+	}
+
+	@Override
+	public Usuario findByUsername(String username) {
+		return usuarioFeignClient.findByUsername(username);
 	}
 	
 	
