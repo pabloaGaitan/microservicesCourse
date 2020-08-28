@@ -22,17 +22,30 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
-
+	
+	//Permisos que tendran los endpoints del servidor de autenticacion 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		
-		super.configure(security);
+		security.tokenKeyAccess("permitAll()")
+			.checkTokenAccess("isAuthenticated()");
 	}
-
+	
+	//Se autentican las aplicaciones que consumen los microservicios
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		
-		super.configure(clients);
+		clients.inMemory().withClient("fontEndAngularApp")//username de la app
+			.secret(passwordEncoder.encode("angular"))//password de la app
+			.scopes("read","write")//permisos de la app
+			.authorizedGrantTypes("password","refresh_token")//autorizacion por contraseña y el token se refresca cuando esta a punto de terminar
+			.accessTokenValiditySeconds(3600)
+			.refreshTokenValiditySeconds(3600)
+			.and()
+			.withClient("fontEndAndroidApp")//username de la app
+			.secret(passwordEncoder.encode("android"))//password de la app
+			.scopes("read","write")//permisos de la app
+			.authorizedGrantTypes("password","refresh_token")//autorizacion por contraseña y el token se refresca cuando esta a punto de terminar
+			.accessTokenValiditySeconds(3600)
+			.refreshTokenValiditySeconds(3600);
 	}
 	
 	//endpoint encargado de generar el token
@@ -44,7 +57,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 	
 	@Bean
-	private JwtTokenStore tokenStore() {
+	public JwtTokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
 

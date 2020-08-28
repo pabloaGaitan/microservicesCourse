@@ -10,5 +10,5 @@ import com.microservicios.usuariocommons.entities.Usuario;
 public interface UsuarioFeignClient {
 	
 	@GetMapping("usuarios/search/username")
-	public Usuario findByUsername(@RequestParam String username);
+	public Usuario findByUsername(@RequestParam("usuario") String usuario);
 }
