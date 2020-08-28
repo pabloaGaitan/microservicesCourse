@@ -5,7 +5,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.microservicios.usuarios.entities.Usuario;
+import com.microservicios.usuariocommons.entities.Usuario;
+
 
 @RepositoryRestResource(path = "usuarios")
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
