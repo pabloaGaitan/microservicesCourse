@@ -29,6 +29,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private InfoAdicionalToken infoAdicionalToken;
+
 	
 	@Autowired
 	private Environment env;
