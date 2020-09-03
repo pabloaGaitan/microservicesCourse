@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.microservicios.oauth.services.IUsuarioService;
 import com.microservicios.usuariocommons.entities.Usuario;
 
+import brave.Tracer;
 import feign.FeignException;
 
 @Component
@@ -21,6 +22,9 @@ public class AuthenticationSuccesErrorHandler implements AuthenticationEventPubl
 	
 	@Autowired
 	private IUsuarioService usuarioService;
+	
+	@Autowired
+	private Tracer tracer;
 	
 	@Override
 	public void publishAuthenticationSuccess(Authentication authentication) {
@@ -39,7 +43,10 @@ public class AuthenticationSuccesErrorHandler implements AuthenticationEventPubl
 
 	@Override
 	public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
-		logger.error("Error en la autenticacion" + exception.getMessage());
+		StringBuilder builder = new StringBuilder();
+		String msg = "Error en la autenticacion" + exception.getMessage();
+		builder.append(msg);
+		logger.error(msg);
 		try { //capturar la excepcion de feign ya que para buscar el usuario hay que consultar un microservicio
 			Usuario usuario = usuarioService.findByUsername(authentication.getName());
 			if(usuario.getIntentos() == null) {
@@ -51,7 +58,10 @@ public class AuthenticationSuccesErrorHandler implements AuthenticationEventPubl
 				logger.info("usuario deshabilitado");
 				usuario.setEnabled(false);
 			}
-			logger.info("intento"+usuario.getIntentos());
+			String intentosMsg = "intento "+usuario.getIntentos();
+			builder.append(" - " + intentosMsg);
+			logger.info(intentosMsg);
+			tracer.currentSpan().tag("error.mensaje", builder.toString());
 			usuarioService.update(usuario, usuario.getId());
 		}catch (FeignException e) {
 			logger.error("el usuario no existe "+ authentication.getName());
