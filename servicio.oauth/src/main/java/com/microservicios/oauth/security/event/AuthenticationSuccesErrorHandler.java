@@ -29,6 +29,9 @@ public class AuthenticationSuccesErrorHandler implements AuthenticationEventPubl
 	@Override
 	public void publishAuthenticationSuccess(Authentication authentication) {
 		UserDetails user = (UserDetails) authentication.getPrincipal();
+//		if(authentication.getName().equalsIgnoreCase("fontEndAngularApp")){
+//		    return; // si es igual a frontendapp se salen del método!
+//		}
 		logger.info("Success Login" + user.getUsername());
 		try {
 			Usuario usuario = usuarioService.findByUsername(user.getUsername());

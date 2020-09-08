@@ -44,12 +44,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	//Se autentican las aplicaciones que consumen los microservicios
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient(env.getProperty("config.security.oauth.client.id"))//username de la app
-			.secret(passwordEncoder.encode(env.getProperty("config.security.oauth.client.secret")))//password de la app
-			.scopes("read","write")//permisos de la app
-			.authorizedGrantTypes("password","refresh_token")//autorizacion por contraseña y el token se refresca cuando esta a punto de terminar
-			.accessTokenValiditySeconds(3600)
-			.refreshTokenValiditySeconds(3600);
+//		clients.inMemory().withClient(env.getProperty("config.security.oauth.client.id"))//username de la app
+//			.secret(passwordEncoder.encode(env.getProperty("config.security.oauth.client.secret")))//password de la app
+//			.scopes("read","write")//permisos de la app
+//			.authorizedGrantTypes("password","refresh_token")//autorizacion por contraseña y el token se refresca cuando esta a punto de terminar
+//			.accessTokenValiditySeconds(3600)
+//			.refreshTokenValiditySeconds(3600);
 
 	}
 	
